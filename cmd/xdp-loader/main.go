@@ -44,10 +44,10 @@ log.Fatalf("map blocked_port not found in object")
 
 var key uint32 = 0
 // store in host byte order (map value is u16 host order expected in loader)
-var p uint16 = uint16(*port)
-if err := m.Put(key, p); err != nil {
-log.Fatalf("failed to set port: %v", err)
-}
+    var p uint16 = uint16(*port)
+    if err := m.Put(key, p); err != nil {
+        log.Fatalf("failed to set port: %v", err)
+    }
 
 
 prog, ok := coll.Programs["xdp_drop_port"]
