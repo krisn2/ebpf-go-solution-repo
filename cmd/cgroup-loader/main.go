@@ -53,13 +53,13 @@ log.Fatalf("failed to set allowed port: %v", err)
 }
 
 
-prog, ok := coll.Programs["allow_only_port"]
+prog, ok := coll.Programs["cgroup_allow_port_v4"]
 if !ok {
-log.Fatalf("program allow_only_port not found")
+    log.Fatalf("program cgroup_allow_port_v4 not found")
 }
 
 
-lnk, err := link.AttachCgroup(link.CgroupOptions{Path: *cgroupPath, Program: prog})
+lnk, err := link.AttachCgroup(link.CgroupOptions{Path: *cgroupPath, Program: prog,  Attach: ebpf.AttachCGroupInet4Connect,})
 if err != nil {
 log.Fatalf("failed to attach cgroup program: %v", err)
 }
