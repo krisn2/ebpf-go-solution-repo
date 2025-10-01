@@ -79,10 +79,10 @@ Attach an XDP program to an interface and drop packets to a given port.
 
 ```bash
 cd bin
-sudo ./xdp-loader -iface eth0 -port 8080
+sudo ./xdp-loader -iface lo -port 8080
 ```
 
-- Drops all TCP traffic on `eth0` going to port `8080`.
+- Drops all TCP traffic on `lo/enp0s3/eth0` going to port `8080`.
 - Default port is `4040`.
 - Detach by pressing `CTRL+C`.
 
@@ -90,11 +90,11 @@ sudo ./xdp-loader -iface eth0 -port 8080
 
 Restrict processes in a cgroup so they can only bind/connect to one port.
 
-**Create a cgroup:**
+**Check BPF triggers::**
 
 ```bash
 cd scripts
-sudo ./create_cgroup.sh /sys/fs/cgroup/mygroup sleep 300
+sudo ./create_cgroup.sh /sys/fs/cgroup/mygroup nc -l -p 4040
 ```
 
 **Attach loader:**
@@ -102,6 +102,18 @@ sudo ./create_cgroup.sh /sys/fs/cgroup/mygroup sleep 300
 ```bash
 cd bin
 sudo ./cgroup-loader -cgroup /sys/fs/cgroup/mygroup -port 4040
+```
+**Then in another terminal:**
+```bash 
+sudo su
+cat /sys/kernel/debug/tracing/trace_pipe
+```
+**You should see bpf_trace_printk lines like:**
+
+```bash
+bind4: port=4040, allowed=4040
+bind4: ALLOW port 4040
+
 ```
 
 - Processes inside `/sys/fs/cgroup/mygroup` can only use TCP port `4040`.
@@ -169,7 +181,7 @@ sudo ./bin/xdp-loader -iface eth0 -port 8080
 
 #------OR-----
 
-sudo ./bin/xdp-loader -iface lb -port 8080
+sudo ./bin/xdp-loader -iface lo -port 8080
 
 
 # Restrict cgroup processes to port 4040
