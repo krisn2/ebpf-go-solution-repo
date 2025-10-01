@@ -53,9 +53,9 @@ func main() {
 	}
 
 	lnk4, err := link.AttachCgroup(link.CgroupOptions{
-		Path: *cgroupPath,
+		Path:    *cgroupPath,
 		Program: progV4,
-		Attach: ebpf.AttachCGroupInet4Connect,
+		Attach:  ebpf.AttachCGroupInet4Connect,
 	})
 	if err != nil {
 		log.Fatalf("failed to attach cgroup/connect4 program: %v", err)
@@ -69,9 +69,9 @@ func main() {
 	}
 
 	lnkBind4, err := link.AttachCgroup(link.CgroupOptions{
-		Path: *cgroupPath,
+		Path:    *cgroupPath,
 		Program: progBind4,
-		Attach: ebpf.AttachCGroupInet4Bind,
+		Attach:  ebpf.AttachCGroupInet4Bind,
 	})
 	if err != nil {
 		log.Fatalf("failed to attach cgroup/bind4 program: %v", err)
@@ -80,11 +80,10 @@ func main() {
 
 	fmt.Printf("cgroup filters attached to %s allowing TCP port %d\n", *cgroupPath, *port)
 	fmt.Printf("Attached: connect4 (outgoing client) and bind4 (incoming server)\n")
-	
+
 	// Keep the program running until interrupted
 	sig := make(chan os.Signal, 1)
 	signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)
 	<-sig
 	fmt.Println("detaching...")
 }
-
