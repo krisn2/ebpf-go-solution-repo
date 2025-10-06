@@ -11,7 +11,6 @@
 #define COUNTER_DROPPED_PACKETS 1
 #define MAX_COUNTERS 10
 
-// Map definitions remain unchanged...
 
 struct {
     __uint(type, BPF_MAP_TYPE_ARRAY);
@@ -86,8 +85,6 @@ static inline int process_ipv4(void *data, void *data_end) {
 
     return check_and_drop_port(tcph, data_end);
 }
-
-// ... (process_ipv6 and xdp_drop_port remain the same as previous)
 
 static inline int process_ipv6(void *data, void *data_end) {
     return XDP_PASS;
